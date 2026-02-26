@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobFlow - Simple Job Tracker for UK Sole Traders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            color: #1d1d1f;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            color: white;
+            padding: 20px;
+            margin: -20px -20px 20px -20px;
+        }
+        
+        header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .stat-card .label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+        
+        .stat-card.pending .value { color: #F59E0B; }
+        .stat-card.active .value { color: #3B82F6; }
+        .stat-card.invoiced .value { color: #8B5CF6; }
+        .stat-card.paid .value { color: #10B981; }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #F97316;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #EA580C;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+        
+        .pipeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .column {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f3f4f6;
+        }
+        
+        .column-header h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+        }
+        
+        .column-header .count {
+            background: #f3f4f6;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .job-card {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .job-card.quote { border-left-color: #F59E0B; }
+        .job-card.confirmed { border-left-color: #3B82F6; }
+        .job-card.in-progress { border-left-color: #8B5CF6; }
+        .job-card.invoiced { border-left-color: #EC4899; }
+        .job-card.paid { border-left-color: #10B981; }
+        
+        .job-card .job-id {
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 600;
+        }
+        
+        .job-card .client {
+            font-weight: 600;
+            margin: 5px 0;
+            font-size: 15px;
+        }
+        
+        .job-card .details {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .job-card .amount {
+            font-weight: 700;
+            color: #10B981;
+            font-size: 16px;
+        }
+        
+        .job-card .po-number {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 18px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #F97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+        
+        /* Alert Banner */
+        .alert-banner {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid #F59E0B;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .alert-banner .icon {
+            font-size: 24px;
+        }
+        
+        .alert-banner .content h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #92400E;
+        }
+        
+        .alert-banner .content p {
+            font-size: 13px;
+            color: #B45309;
+            margin-top: 3px;
+        }
+        
+        .alert-banner .content a {
+            color: #92400E;
+            font-weight: 600;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: #9ca3af;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 JobFlow</h1>
+            <p>Simple job tracking for UK sole traders</p>
+        </header>
+        
+        <div class="alert-banner">
+            <span class="icon">⚠️</span>
+            <div class="content">
+                <h4>MTD for Income Tax starts April 2026</h4>
+                <p>If you earn £50k+ from self-employment, you'll need MTD-compliant software. <a href="https://www.xero.com/uk/making-tax-digital/" target="_blank" rel="noopener">Check Xero</a> or <a href="https://www.quickbooks.co.uk/making-tax-digital/" target="_blank" rel="noopener">QuickBooks</a>.</p>
+            </div>
+        </div>
+        
+        <div class="stats" id="stats">
+            <div class="stat-card pending">
+                <div class="label">Quotes Out</div>
+                <div class="value" id="stat-quote">£0</div>
+            </div>
+            <div class="stat-card active">
+                <div class="label">In Progress</div>
+                <div class="value" id="stat-progress">£0</div>
+            </div>
+            <div class="stat-card invoiced">
+                <div class="label">Invoiced</div>
+                <div class="value" id="stat-invoiced">£0</div>
+            </div>
+            <div class="stat-card paid">
+                <div class="label">Paid</div>
+                <div class="value" id="stat-paid">£0</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary" onclick="openModal()">+ New Job</button>
+            <button class="btn btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
+        </div>
+        
+        <div class="pipeline" id="pipeline">
+            <div class="column" data-status="quote">
+                <div class="column-header">
+                    <h3>📋 Quotes</h3>
+                    <span class="count" id="count-quote">0</span>
+                </div>
+                <div class="jobs-list" id="list-quote"></div>
+            </div>
+            
+            <div class="column" data-status="confirmed">
+                <div class="column-header">
+                    <h3>✅ Confirmed</h3>
+                    <span class="count" id="count-confirmed">0</span>
+                </div>
+                <div class="jobs-list" id="list-confirmed"></div>
+            </div>
+            
+            <div class="column" data-status="in-progress">
+                <div class="column-header">
+                    <h3>🔧 In Progress</h3>
+                    <span class="count" id="count-in-progress">0</span>
+                </div>
+                <div class="jobs-list" id="list-in-progress"></div>
+            </div>
+            
+            <div class="column" data-status="invoiced">
+                <div class="column-header">
+                    <h3>📄 Invoiced</h3>
+                    <span class="count" id="count-invoiced">0</span>
+                </div>
+                <div class="jobs-list" id="list-invoiced"></div>
+            </div>
+            
+            <div class="column" data-status="paid">
+                <div class="column-header">
+                    <h3>💰 Paid</h3>
+                    <span class="count" id="count-paid">0</span>
+                </div>
+                <div class="jobs-list" id="list-paid"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">New Job</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="job-form">
+                    <input type="hidden" id="job-id">
+                    
+                    <div class="form-group">
+                        <label>Client Name *</label>
+                        <input type="text" id="client" required placeholder="e.g., John Smith">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Amount (£) *</label>
+                            <input type="number" id="amount" required step="0.01" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="status">
+                                <option value="quote">Quote</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="invoiced">Invoiced</option>
+                                <option value="paid">Paid</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Job Type</label>
+                            <input type="text" id="job-type" placeholder="e.g., Fuse board replacement">
+                        </div>
+                        <div class="form-group">
+                            <label>PO Number</label>
+                            <input type="text" id="po-number" placeholder="e.g., PO-12345">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="notes" rows="3" placeholder="Any additional details..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="delete-btn" onclick="deleteJob()" style="display:none;">Delete</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveJob()">Save Job</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Initialize
+        let jobs = JSON.parse(localStorage.getItem('jobflow-jobs')) || [];
+        let jobCounter = parseInt(localStorage.getItem('jobflow-counter')) || 1000;
+        let editingId = null;
+        
+        // Save to localStorage
+        function saveData() {
+            localStorage.setItem('jobflow-jobs', JSON.stringify(jobs));
+            localStorage.setItem('jobflow-counter', jobCounter.toString());
+        }
+        
+        // Format currency
+        function formatMoney(amount) {
+            return '£' + parseFloat(amount || 0).toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+        
+        // Render all jobs
+        function renderJobs() {
+            const statuses = ['quote', 'confirmed', 'in-progress', 'invoiced', 'paid'];
+            const stats = { quote: 0, confirmed: 0, 'in-progress': 0, invoiced: 0, paid: 0 };
+            const counts = { quote: 0, confirmed: 0, 'in-progress': 0, invoiced: 0, paid: 0 };
+            
+            // Clear all lists
+            statuses.forEach(status => {
+                document.getElementById(`list-${status}`).innerHTML = '';
+            });
+            
+            // Sort by date (newest first)
+            const sortedJobs = [...jobs].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            sortedJobs.forEach(job => {
+                const card = document.createElement('div');
+                card.className = `job-card ${job.status}`;
+                card.onclick = () => editJob(job.id);
+                
+                card.innerHTML = `
+                    <div class="job-id">JOB-${job.jobNumber}</div>
+                    <div class="client">${escapeHtml(job.client)}</div>
+                    <div class="details">${job.jobType ? escapeHtml(job.jobType) : ''}</div>
+                    <div class="amount">${formatMoney(job.amount)}</div>
+                    ${job.poNumber ? `<div class="po-number">PO: ${escapeHtml(job.poNumber)}</div>` : ''}
+                `;
+                
+                document.getElementById(`list-${job.status}`).appendChild(card);
+                stats[job.status] += parseFloat(job.amount) || 0;
+                counts[job.status]++;
+            });
+            
+            // Update stats
+            document.getElementById('stat-quote').textContent = formatMoney(stats.quote);
+            document.getElementById('stat-progress').textContent = formatMoney(stats['in-progress'] + stats.confirmed);
+            document.getElementById('stat-invoiced').textContent = formatMoney(stats.invoiced);
+            document.getElementById('stat-paid').textContent = formatMoney(stats.paid);
+            
+            // Update counts
+            statuses.forEach(status => {
+                document.getElementById(`count-${status}`).textContent = counts[status];
+                const list = document.getElementById(`list-${status}`);
+                if (counts[status] === 0) {
+                    list.innerHTML = '<div class="empty-state"><p>No jobs yet</p></div>';
+                }
+            });
+        }
+        
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Open modal for new job
+        function openModal() {
+            editingId = null;
+            document.getElementById('modal-title').textContent = 'New Job';
+            document.getElementById('job-form').reset();
+            document.getElementById('status').value = 'quote';
+            document.getElementById('delete-btn').style.display = 'none';
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            editingId = null;
+        }
+        
+        // Edit existing job
+        function editJob(id) {
+            const job = jobs.find(j => j.id === id);
+            if (!job) return;
+            
+            editingId = id;
+            document.getElementById('modal-title').textContent = 'Edit Job';
+            document.getElementById('client').value = job.client;
+            document.getElementById('amount').value = job.amount;
+            document.getElementById('status').value = job.status;
+            document.getElementById('job-type').value = job.jobType || '';
+            document.getElementById('po-number').value = job.poNumber || '';
+            document.getElementById('notes').value = job.notes || '';
+            document.getElementById('delete-btn').style.display = 'inline-block';
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        // Save job
+        function saveJob() {
+            const client = document.getElementById('client').value.trim();
+            const amount = document.getElementById('amount').value;
+            
+            if (!client || !amount) {
+                alert('Please fill in Client Name and Amount');
+                return;
+            }
+            
+            if (editingId) {
+                // Update existing
+                const index = jobs.findIndex(j => j.id === editingId);
+                if (index !== -1) {
+                    jobs[index] = {
+                        ...jobs[index],
+                        client,
+                        amount: parseFloat(amount),
+                        status: document.getElementById('status').value,
+                        jobType: document.getElementById('job-type').value.trim(),
+                        poNumber: document.getElementById('po-number').value.trim(),
+                        notes: document.getElementById('notes').value.trim(),
+                        updatedAt: new Date().toISOString()
+                    };
+                }
+            } else {
+                // Create new
+                jobCounter++;
+                jobs.push({
+                    id: Date.now().toString(),
+                    jobNumber: jobCounter,
+                    client,
+                    amount: parseFloat(amount),
+                    status: document.getElementById('status').value,
+                    jobType: document.getElementById('job-type').value.trim(),
+                    poNumber: document.getElementById('po-number').value.trim(),
+                    notes: document.getElementById('notes').value.trim(),
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                });
+            }
+            
+            saveData();
+            renderJobs();
+            closeModal();
+        }
+        
+        // Delete job
+        function deleteJob() {
+            if (!editingId) return;
+            if (!confirm('Delete this job?')) return;
+            
+            jobs = jobs.filter(j => j.id !== editingId);
+            saveData();
+            renderJobs();
+            closeModal();
+        }
+        
+        // Export to CSV
+        function exportCSV() {
+            if (jobs.length === 0) {
+                alert('No jobs to export');
+                return;
+            }
+            
+            const headers = ['Job Number', 'Client', 'Amount', 'Status', 'Job Type', 'PO Number', 'Notes', 'Created'];
+            const rows = jobs.map(j => [
+                `JOB-${j.jobNumber}`,
+                `"${j.client.replace(/"/g, '""')}"`,
+                j.amount,
+                j.status,
+                `"${(j.jobType || '').replace(/"/g, '""')}"`,
+                `"${(j.poNumber || '').replace(/"/g, '""')}"`,
+                `"${(j.notes || '').replace(/"/g, '""')}"`,
+                new Date(j.createdAt).toLocaleDateString('en-GB')
+            ]);
+            
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `jobflow-export-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Close modal on overlay click
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+        
+        // Initial render
+        renderJobs();
+    </script>
+</body>
+</html>

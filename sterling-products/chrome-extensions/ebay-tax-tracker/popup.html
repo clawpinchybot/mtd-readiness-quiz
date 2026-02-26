@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK eBay Tax Tracker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🇬🇧 UK eBay Tax Tracker</h1>
+      <p class="subtitle">HMRC Reporting Made Easy</p>
+    </header>
+
+    <!-- Tax Year Selector -->
+    <div class="tax-year-selector">
+      <label>Tax Year:</label>
+      <select id="taxYear">
+        <option value="2025">2025/26 (Current)</option>
+        <option value="2024">2024/25</option>
+      </select>
+    </div>
+
+    <!-- Threshold Progress -->
+    <div class="threshold-section">
+      <h2>📊 HMRC Reporting Threshold</h2>
+      <p class="warning-text">eBay must report if you hit EITHER threshold:</p>
+      
+      <div class="threshold-item">
+        <div class="threshold-header">
+          <span>Sales</span>
+          <span id="salesProgress">£0 / £1,707</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="salesBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="threshold-item">
+        <div class="threshold-header">
+          <span>Transactions</span>
+          <span id="transProgress">0 / 30</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="transBar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Sales</div>
+        <div class="stat-value" id="totalSales">£0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">eBay Fees</div>
+        <div class="stat-value" id="totalFees">£0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Net Profit</div>
+        <div class="stat-value profit" id="netProfit">£0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Transactions</div>
+        <div class="stat-value" id="totalTrans">0</div>
+      </div>
+    </div>
+
+    <!-- Trading Allowance -->
+    <div class="allowance-section">
+      <h2>💰 Trading Allowance</h2>
+      <div class="allowance-info">
+        <span>Tax-Free Allowance:</span>
+        <strong>£1,000</strong>
+      </div>
+      <div class="allowance-info">
+        <span>Remaining:</span>
+        <strong id="allowanceRemaining">£1,000.00</strong>
+      </div>
+      <div class="tax-status" id="taxStatus">
+        ✅ No tax due yet
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="actions">
+      <button id="refreshBtn" class="btn btn-primary">
+        🔄 Refresh Data
+      </button>
+      <button id="exportBtn" class="btn btn-secondary">
+        📥 Export for Tax Return
+      </button>
+    </div>
+
+    <!-- Status Message -->
+    <div class="status-message" id="statusMessage"></div>
+
+    <!-- Footer -->
+    <footer>
+      <p class="info-text">
+        <strong>⚠️ Important:</strong> This tool helps you track, but you're responsible for accurate tax reporting.
+      </p>
+      <p class="info-text">
+        First reports due <strong>January 2026</strong> for 2025 sales.
+      </p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

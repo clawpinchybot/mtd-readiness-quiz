@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuoteQuick</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔨 QuoteQuick</h1>
+      <p class="tagline">Professional quotes in seconds</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="templates">Templates</button>
+      <button class="tab" data-tab="create">+ New</button>
+    </div>
+
+    <!-- Templates Tab -->
+    <div id="templates-tab" class="tab-content active">
+      <div id="template-list" class="template-list">
+        <!-- Templates loaded here -->
+      </div>
+      <div id="no-templates" class="empty-state" style="display:none;">
+        <p>No templates yet</p>
+        <p class="hint">Create your first quote template</p>
+      </div>
+    </div>
+
+    <!-- Create Tab -->
+    <div id="create-tab" class="tab-content">
+      <form id="template-form">
+        <label>
+          Template Name
+          <input type="text" id="template-name" placeholder="e.g., Boiler Service" required>
+        </label>
+        
+        <label>
+          Trade
+          <select id="template-trade">
+            <option value="plumber">Plumber</option>
+            <option value="electrician">Electrician</option>
+            <option value="gas">Gas Engineer</option>
+            <option value="heating">Heating Engineer</option>
+            <option value="builder">Builder</option>
+            <option value="carpenter">Carpenter</option>
+            <option value="painter">Painter/Decorator</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+
+        <label>
+          Quote Template
+          <textarea id="template-content" rows="10" placeholder="Hi {name},
+
+Thank you for your enquiry about {job_type}.
+
+Based on the details provided, my quote is:
+
+**Labour:** £XXX
+**Materials:** £XXX (if needed)
+**Total:** £XXX
+
+This includes:
+- [Item 1]
+- [Item 2]
+
+I'm available to start on [date]. I'm fully insured and Gas Safe registered (if applicable).
+
+Let me know if you have any questions.
+
+Best regards,
+[Your Name]
+[Your Phone]"></textarea>
+        </label>
+
+        <div class="variables">
+          <p class="variables-title">Available variables:</p>
+          <code>{name}</code> <code>{job_type}</code> <code>{location}</code>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Template</button>
+      </form>
+    </div>
+
+    <footer>
+      <p class="footer-text">QuoteQuick v1.0 • UK Tradesmen</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

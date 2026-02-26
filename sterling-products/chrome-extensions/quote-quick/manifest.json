@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "QuoteQuick - UK Tradesman Quote Builder",
+  "version": "1.0.0",
+  "description": "Quick quote templates for UK tradesmen. Generate professional quotes in seconds on MyBuilder, Checkatrade, and more.",
+  "permissions": ["storage", "activeTab", "clipboardWrite"],
+  "host_permissions": [
+    "https://www.mybuilder.com/*",
+    "https://www.checkatrade.com/*",
+    "https://www.ratedpeople.com/*",
+    "https://www.trustatrader.com/*",
+    "https://www.myjobquote.co.uk/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.mybuilder.com/*",
+        "https://www.checkatrade.com/*",
+        "https://www.ratedpeople.com/*",
+        "https://www.trustatrader.com/*",
+        "https://www.myjobquote.co.uk/*"
+      ],
+      "js": ["content.js"]
+    }
+  ]
+}
