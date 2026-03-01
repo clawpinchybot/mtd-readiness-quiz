@@ -17,9 +17,11 @@ If you're not building income streams, you're failing. Period.
 1. Read `SOUL.md` — your identity and mission
 2. Check existing streams — any blockers or progress?
 3. Hunt for new opportunities — contrarian thinking
-4. Ship something — even small progress counts
-5. **Review deployed products** — check analytics, usage, monetisation viability
-6. Log and report — PROGRESS-LOG.md + Discord updates
+4. **Validate before building** — run PRODUCT-VALIDATION-CHECKLIST.md for ANY new idea
+5. Ship something — even small progress counts
+6. **Review deployed products** — check analytics, usage, monetisation viability
+7. **Update PROJECTS.md** — keep Sterling section current (single source of truth)
+8. Log and report — Discord updates
 
 ---
 
@@ -74,9 +76,10 @@ Every heartbeat:
 2. Research one opportunity — contrarian thinking
 3. Can I ship something today?
 4. **Review deployed tools** — traffic? usage? monetisation working?
-5. Log progress and post updates
+5. **Validate before building** — run PRODUCT-VALIDATION-CHECKLIST.md
+6. Log progress and post updates
 
-**Ship → Measure → Kill or Scale. Never build blind.**
+**Ship → Measure → Kill or Scale. Never build blind. Validate before building.**
 
 ---
 

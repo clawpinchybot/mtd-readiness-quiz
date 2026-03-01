@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screenshot Generator - Sterling Products</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f7;
+        }
+        h1 {
+            color: #1d1d1f;
+            margin-bottom: 10px;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .instructions ol {
+            margin-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .screenshot {
+            width: 1200px;
+            height: 630px;
+            margin: 20px auto;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .screenshot-content {
+            text-align: center;
+            color: white;
+            z-index: 10;
+            padding: 40px;
+        }
+        .screenshot-content h2 {
+            font-size: 64px;
+            margin: 0 0 20px 0;
+            font-weight: 700;
+        }
+        .screenshot-content p {
+            font-size: 32px;
+            margin: 0;
+            opacity: 0.95;
+        }
+        .screenshot-content .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Product-specific gradients */
+        .jobflow { background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); }
+        .landlord { background: linear-gradient(135deg, #10B981 0%, #059669 100%); }
+        .section21 { background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); }
+        .mtd { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); }
+
+        .note {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .note strong {
+            color: #92400E;
+        }
+    </style>
+</head>
+<body>
+    <h1>📸 Screenshot Generator for Sterling Products</h1>
+
+    <div class="instructions">
+        <h2>How to Create Screenshots</h2>
+        <ol>
+            <li><strong>Open this file</strong> in your browser</li>
+            <li><strong>Scroll to each product</strong> below</li>
+            <li><strong>Take a screenshot</strong> of just the colored box (1200x630px)
+                <ul>
+                    <li>Mac: Cmd+Shift+4, then Space, then click the box</li>
+                    <li>Windows: Use Snipping Tool or ShareX</li>
+                </ul>
+            </li>
+            <li><strong>Save as</strong> <code>screenshot.png</code> in the product's folder</li>
+            <li><strong>Repeat</strong> for all 4 products</li>
+        </ol>
+
+        <div class="note">
+            <strong>💡 Pro Tip:</strong> These are placeholder screenshots. For better results,
+            take actual screenshots of your products in action, then add text overlay in Canva or Figma.
+        </div>
+    </div>
+
+    <!-- JobFlow -->
+    <div class="screenshot jobflow">
+        <div class="screenshot-content">
+            <span class="emoji">💼</span>
+            <h2>JobFlow</h2>
+            <p>Free Job Tracker for UK Sole Traders</p>
+        </div>
+    </div>
+
+    <!-- Landlord Tracker -->
+    <div class="screenshot landlord">
+        <div class="screenshot-content">
+            <span class="emoji">🏠</span>
+            <h2>Landlord Tracker</h2>
+            <p>Free UK Compliance Manager</p>
+        </div>
+    </div>
+
+    <!-- Section 21 Checker -->
+    <div class="screenshot section21">
+        <div class="screenshot-content">
+            <span class="emoji">⚠️</span>
+            <h2>Section 21 Checker</h2>
+            <p>April 30, 2026 Deadline</p>
+        </div>
+    </div>
+
+    <!-- MTD Calculator -->
+    <div class="screenshot mtd">
+        <div class="screenshot-content">
+            <span class="emoji">📊</span>
+            <h2>MTD Calculator</h2>
+            <p>Are You Ready for April 2026?</p>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h2>Where to Save Screenshots</h2>
+        <ul>
+            <li><strong>JobFlow:</strong> <code>/sterling-products/jobflow-deploy/screenshot.png</code></li>
+            <li><strong>Landlord:</strong> <code>/sterling-products/landlord-compliance-tracker/screenshot.png</code></li>
+            <li><strong>Section 21:</strong> <code>/sterling-products/section21-checker/screenshot.png</code></li>
+            <li><strong>MTD:</strong> <code>/workspace/sterling-products/mtd-readiness-calculator/screenshot.png</code></li>
+        </ul>
+
+        <div class="note">
+            <strong>Next:</strong> After saving screenshots, commit all changes and push to GitHub.
+            The screenshots will automatically appear in social media previews!
+        </div>
+    </div>
+</body>
+</html>
